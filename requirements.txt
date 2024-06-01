@@ -1,0 +1,15 @@
+beautifulsoup4
+pandas
+selenium
+tqdm
+vnstock3
+flask
+dash
+plotly
+scikit-learn
+numpy
+matplotlib
+seaborn 
+yfinance
+joblib
+xgboost 
