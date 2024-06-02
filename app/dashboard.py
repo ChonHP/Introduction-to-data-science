@@ -1,8 +1,8 @@
 import dash
+import pandas as pd
+import plotly.express as px
 from dash import dcc, html
 from dash.dependencies import Input, Output
-import plotly.express as px
-import pandas as pd
 
 # Load the combined data from multiple CSV files
 fpt_data = pd.read_csv('data//merged_FPT_data.csv')
@@ -58,6 +58,7 @@ app.layout = html.Div(children=[
     dcc.Graph(id='correlation-indexes-sentiment')
 ])
 
+
 # Callbacks for updating the graphs
 @app.callback(
     Output('volume-time-series', 'figure'),
@@ -65,8 +66,10 @@ app.layout = html.Div(children=[
 )
 def update_volume_graph(selected_symbol):
     filtered_data = combined_data[combined_data['Symbol'] == selected_symbol]
-    fig = px.line(filtered_data, x='Date', y=f'{selected_symbol}_volume', title=f'Khối Lượng Giao Dịch Của {selected_symbol} Theo Thời Gian')
+    fig = px.line(filtered_data, x='Date', y=f'{selected_symbol}_volume',
+                  title=f'Khối Lượng Giao Dịch Của {selected_symbol} Theo Thời Gian')
     return fig
+
 
 @app.callback(
     Output('close-price-time-series', 'figure'),
@@ -74,8 +77,10 @@ def update_volume_graph(selected_symbol):
 )
 def update_close_price_graph(selected_symbol):
     filtered_data = combined_data[combined_data['Symbol'] == selected_symbol]
-    fig = px.line(filtered_data, x='Date', y=f'{selected_symbol}_close', title=f'Giá Đóng Cửa Của {selected_symbol} Theo Thời Gian')
+    fig = px.line(filtered_data, x='Date', y=f'{selected_symbol}_close',
+                  title=f'Giá Đóng Cửa Của {selected_symbol} Theo Thời Gian')
     return fig
+
 
 @app.callback(
     Output('correlation-heatmap', 'figure'),
@@ -87,16 +92,18 @@ def update_correlation_heatmap(selected_symbol):
     fig = px.imshow(correlation, text_auto=True, title=f'Tương Quan Giữa Giá và Điểm Số Cảm Xúc Của {selected_symbol}')
     return fig
 
+
 @app.callback(
     Output('stock-indexes', 'figure'),
     Input('stock-symbol-dropdown', 'value')
 )
 def update_stock_indexes(selected_symbol):
     filtered_data = combined_data[combined_data['Symbol'] == selected_symbol]
-    fig = px.line(filtered_data, x='Date', 
-                  y=['Dollar_Index_Close', 'Dow_Jones_Close', 'Nasdaq_Close', 'US_30_Close', 'US_500_Close'], 
+    fig = px.line(filtered_data, x='Date',
+                  y=['Dollar_Index_Close', 'Dow_Jones_Close', 'Nasdaq_Close', 'US_30_Close', 'US_500_Close'],
                   title=f'Các Chỉ Số Chứng Khoán Theo Thời Gian')
     return fig
+
 
 @app.callback(
     Output('scatter-price-sentiment', 'figure'),
@@ -104,10 +111,11 @@ def update_stock_indexes(selected_symbol):
 )
 def update_scatter_price_sentiment(selected_symbol):
     filtered_data = combined_data[combined_data['Symbol'] == selected_symbol]
-    fig = px.scatter(filtered_data, x='sentiment_score', y=f'{selected_symbol}_close', color=f'{selected_symbol}_close', 
+    fig = px.scatter(filtered_data, x='sentiment_score', y=f'{selected_symbol}_close', color=f'{selected_symbol}_close',
                      color_continuous_scale=px.colors.sequential.Viridis,
                      title=f'Biểu Đồ Phân Tán Giữa Giá Đóng Cửa và Điểm Số Cảm Xúc Của {selected_symbol}')
     return fig
+
 
 @app.callback(
     Output('scatter-indexes-price', 'figure'),
@@ -115,9 +123,12 @@ def update_scatter_price_sentiment(selected_symbol):
 )
 def update_scatter_indexes_price(selected_symbol):
     filtered_data = combined_data[combined_data['Symbol'] == selected_symbol]
-    fig = px.scatter_matrix(filtered_data, dimensions=['Dollar_Index_Close', 'Dow_Jones_Close', 'Nasdaq_Close', 'US_30_Close', 'US_500_Close', f'{selected_symbol}_close'],
+    fig = px.scatter_matrix(filtered_data,
+                            dimensions=['Dollar_Index_Close', 'Dow_Jones_Close', 'Nasdaq_Close', 'US_30_Close',
+                                        'US_500_Close', f'{selected_symbol}_close'],
                             title=f'Biểu Đồ Phân Tán Giữa Các Chỉ Số Chứng Khoán và Giá Đóng Cửa Của {selected_symbol}')
     return fig
+
 
 @app.callback(
     Output('scatter-indexes-sentiment', 'figure'),
@@ -125,9 +136,13 @@ def update_scatter_indexes_price(selected_symbol):
 )
 def update_scatter_indexes_sentiment(selected_symbol):
     filtered_data = combined_data[combined_data['Symbol'] == selected_symbol]
-    fig = px.scatter_matrix(filtered_data, dimensions=['Dollar_Index_Close', 'Dow_Jones_Close', 'Nasdaq_Close', 'US_30_Close', 'US_500_Close', 'sentiment_score'],
-                            title=f'Biểu Đồ Phân Tán Giữa Các Chỉ Số Chứng Khoán và Điểm Số Cảm Xúc Của {selected_symbol}')
+    fig = px.scatter_matrix(filtered_data,
+                            dimensions=['Dollar_Index_Close', 'Dow_Jones_Close', 'Nasdaq_Close', 'US_30_Close',
+                                        'US_500_Close', 'sentiment_score'],
+                            title=f'Biểu Đồ Phân Tán Giữa Các Chỉ Số Chứng Khoán '
+                                  f'và Điểm Số Cảm Xúc Của {selected_symbol}')
     return fig
+
 
 @app.callback(
     Output('correlation-indexes-price', 'figure'),
@@ -135,9 +150,12 @@ def update_scatter_indexes_sentiment(selected_symbol):
 )
 def update_correlation_indexes_price(selected_symbol):
     filtered_data = combined_data[combined_data['Symbol'] == selected_symbol]
-    correlation = filtered_data[['Dollar_Index_Close', 'Dow_Jones_Close', 'Nasdaq_Close', 'US_30_Close', 'US_500_Close', f'{selected_symbol}_close']].corr()
-    fig = px.imshow(correlation, text_auto=True, title=f'Tương Quan Giữa Các Chỉ Số Chứng Khoán và Giá Đóng Cửa Của {selected_symbol}')
+    correlation = filtered_data[['Dollar_Index_Close', 'Dow_Jones_Close', 'Nasdaq_Close', 'US_30_Close', 'US_500_Close',
+                                 f'{selected_symbol}_close']].corr()
+    fig = px.imshow(correlation, text_auto=True,
+                    title=f'Tương Quan Giữa Các Chỉ Số Chứng Khoán và Giá Đóng Cửa Của {selected_symbol}')
     return fig
+
 
 @app.callback(
     Output('correlation-indexes-sentiment', 'figure'),
@@ -145,9 +163,12 @@ def update_correlation_indexes_price(selected_symbol):
 )
 def update_correlation_indexes_sentiment(selected_symbol):
     filtered_data = combined_data[combined_data['Symbol'] == selected_symbol]
-    correlation = filtered_data[['Dollar_Index_Close', 'Dow_Jones_Close', 'Nasdaq_Close', 'US_30_Close', 'US_500_Close', 'sentiment_score']].corr()
-    fig = px.imshow(correlation, text_auto=True, title=f'Tương Quan Giữa Các Chỉ Số Chứng Khoán và Điểm Số Cảm Xúc Của {selected_symbol}')
+    correlation = filtered_data[['Dollar_Index_Close', 'Dow_Jones_Close', 'Nasdaq_Close', 'US_30_Close', 'US_500_Close',
+                                 'sentiment_score']].corr()
+    fig = px.imshow(correlation, text_auto=True,
+                    title=f'Tương Quan Giữa Các Chỉ Số Chứng Khoán và Điểm Số Cảm Xúc Của {selected_symbol}')
     return fig
+
 
 # Run the app
 if __name__ == '__main__':
