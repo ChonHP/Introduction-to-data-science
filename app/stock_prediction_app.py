@@ -1,11 +1,12 @@
 # File: app/stock_prediction_app.py
-import numpy as np
-import streamlit as st
-import pandas as pd
-import joblib
 import os
-import matplotlib.pyplot as plt
 from datetime import timedelta
+
+import joblib
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import streamlit as st
 from sklearn.preprocessing import StandardScaler
 
 # Đặt style cho Matplotlib
@@ -18,7 +19,7 @@ st.title("Dự đoán giá cổ phiếu Việt Nam")
 stock_symbol = st.selectbox("Chọn mã cổ phiếu", ["FPT", "HPG", "VCB", "VIC", "VNM"])
 
 # Chọn mô hình
-model_files = os.listdir("..//models")
+model_files = os.listdir("models")
 model_files = [f for f in model_files if stock_symbol in f]
 model_name = st.selectbox("Chọn mô hình", model_files)
 
@@ -26,7 +27,7 @@ model_name = st.selectbox("Chọn mô hình", model_files)
 days_to_predict = st.number_input("Số ngày muốn dự đoán", min_value=1, max_value=30, value=7)
 
 # Tải dữ liệu
-data_path = f"..//data//merged_{stock_symbol}_data.csv"
+data_path = f"data/merged_{stock_symbol}_data.csv"
 data = pd.read_csv(data_path)
 
 # Đổi tên cột 'Unnamed: 0' thành 'Date' nếu nó tồn tại
@@ -38,7 +39,7 @@ data['Date'] = pd.to_datetime(data['Date'])
 data.set_index('Date', inplace=True)
 
 # Tải mô hình đã chọn
-model_path = os.path.join("../models", model_name)
+model_path = os.path.join("models", model_name)
 model = joblib.load(model_path)
 
 # Chuẩn bị dữ liệu đặc trưng
@@ -76,6 +77,7 @@ ax.set_xlabel('Ngày')
 ax.set_ylabel('Giá')
 ax.set_title(f'Dự đoán giá cổ phiếu {stock_symbol}', color='white')
 ax.legend()
+fig.set_size_inches(10, 6)
 
 # Hiển thị kết quả trên Streamlit
 st.write(f"Giá dự đoán cho cổ phiếu {stock_symbol} trong {days_to_predict} ngày tới:")
@@ -86,10 +88,11 @@ st.pyplot(fig)
 # Biểu đồ thêm cho nhà đầu tư
 # Biểu đồ histogram của giá dự đoán
 fig_hist, ax_hist = plt.subplots()
-ax_hist.hist(future_prices, bins=10, edgecolor='white', color='magenta')
+ax_hist.hist(future_prices, bins=20, edgecolor='white', color='magenta')
 ax_hist.set_xlabel('Giá dự đoán', color='white')
 ax_hist.set_ylabel('Tần suất', color='white')
 ax_hist.set_title('Phân bố giá dự đoán', color='white')
+fig_hist.set_size_inches(10, 6)
 
 st.pyplot(fig_hist)
 
@@ -100,5 +103,6 @@ ax_trend.set_xlabel('Ngày', color='white')
 ax_trend.set_ylabel('Biến động giá', color='white')
 ax_trend.set_title('Biến động giá dự đoán qua các ngày', color='white')
 ax_trend.legend()
+fig_trend.set_size_inches(10, 6)
 
 st.pyplot(fig_trend)
