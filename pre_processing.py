@@ -3,7 +3,7 @@ from sklearn.preprocessing import StandardScaler
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 # Tải dữ liệu
-file_path = 'data//article.csv'  
+file_path = 'data//article.csv'
 data = pd.read_csv(file_path)
 
 # Đặt tên cột phù hợp
@@ -56,14 +56,15 @@ for name, path in file_paths:
     else:
         df['time'] = pd.to_datetime(df['time'])
         df.set_index('time', inplace=True)
-        
+
     # Xóa cột Dollar_Index_Volume nếu tồn tại
     if 'Volume' in df.columns:
         df.drop(columns=['Volume'], inplace=True)
-    
+
     dataframes[name] = df
     print(f"Dataframe {name} after setting datetime index:")
     print(df.head())
+
 
 def fill_missing_values(df):
     df = df.copy()
@@ -72,6 +73,7 @@ def fill_missing_values(df):
         if df[col].isnull().any():
             df[col].fillna(df[col].mean(), inplace=True)
     return df
+
 
 # Chuyển đổi dữ liệu time-series thành dữ liệu đặc trưng
 def create_features(df, label):
@@ -91,13 +93,14 @@ def create_features(df, label):
     feature_cols = ['return', 'ma5', 'ma10', 'std_dev', 'ema10']
     df.dropna(inplace=True)  # Đảm bảo không có giá trị NA trước khi chuẩn hóa
     df[feature_cols] = scaler.fit_transform(df[feature_cols])
-    
+
     df.columns = [f"{label}_{col}" for col in df.columns]  # Nhãn hóa tên cột
-    
+
     print(f"Features for {label} after creation and normalization:")
     print(df.head())
-    
+
     return df
+
 
 # Đọc dữ liệu bài báo đã tiền xử lý
 articles_path = 'data//preprocessed_articles_with_sentiment.csv'
@@ -115,10 +118,10 @@ for stock in stocks:
         if index in dataframes:
             features_df = create_features(dataframes[index], index)
             merged_df = merged_df.join(features_df, how='inner')
-    
+
     # Kết hợp với dữ liệu bài báo
     merged_df = merged_df.join(articles_data['sentiment_score'], how='left')
-    
+
     # Điền giá trị khuyết sử dụng phương pháp trung bình động
     merged_df = fill_missing_values(merged_df)
 

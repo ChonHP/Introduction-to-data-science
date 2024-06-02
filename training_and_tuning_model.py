@@ -1,13 +1,12 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.model_selection import KFold, cross_val_score, train_test_split, GridSearchCV
-from sklearn.linear_model import LinearRegression, Ridge, Lasso
-from sklearn.ensemble import RandomForestRegressor
-from xgboost import XGBRegressor
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_squared_error, r2_score
 import os
+
 import joblib
+import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.model_selection import KFold, cross_val_score, GridSearchCV
+from sklearn.preprocessing import StandardScaler
+from xgboost import XGBRegressor
 
 # Tạo thư mục lưu biểu đồ và mô hình nếu chưa tồn tại
 output_folder = 'resources'
@@ -42,6 +41,7 @@ models = {
     'XGBoost Regressor': XGBRegressor(objective='reg:squarederror', random_state=42)
 }
 
+
 # Hàm tinh chỉnh và đánh giá mô hình
 def tune_and_evaluate(X, y, model, params):
     kf = KFold(n_splits=10, shuffle=True, random_state=42)
@@ -52,9 +52,10 @@ def tune_and_evaluate(X, y, model, params):
     else:
         best_model = model
         best_model.fit(X, y)
-    cv_rmse = (-cross_val_score(best_model, X, y, cv=kf, scoring='neg_root_mean_squared_error').mean())**0.5
+    cv_rmse = (-cross_val_score(best_model, X, y, cv=kf, scoring='neg_root_mean_squared_error').mean()) ** 0.5
     cv_r2 = cross_val_score(best_model, X, y, cv=kf, scoring='r2').mean()
     return best_model, cv_rmse, cv_r2
+
 
 # Ánh xạ mô hình vào bộ datasets
 results = []
@@ -68,7 +69,7 @@ for dataset_name, data in datasets.items():
     # Chuẩn hóa features
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
-    
+
     for model_name, model in models.items():
         params = tuning_params.get(model_name, {})
         best_model, cv_rmse, cv_r2 = tune_and_evaluate(X_scaled, y, model, params)
@@ -78,7 +79,7 @@ for dataset_name, data in datasets.items():
             'CV_RMSE': cv_rmse,
             'CV_R^2': cv_r2
         })
-        
+
         # Save the tuned model
         joblib.dump(best_model, os.path.join(model_folder, f'{model_name}_{dataset_name}_tuned.joblib'))
 
