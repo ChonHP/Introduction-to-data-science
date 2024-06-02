@@ -1,6 +1,6 @@
 # HỆ THỐNG DỰ ĐOÁN GIÁ CÁC MÃ CỔ PHIẾU CỦA VIỆT NAM
 
-[![Streamlit](https://img.shields.io/badge/Go%20To-Streamlit%20Cloud-red?logo=streamlit)](https://polyps-segmentation-txgih92nkah.streamlit.app/)
+[![Streamlit](https://img.shields.io/badge/Go%20To-Streamlit%20Cloud-red?logo=streamlit)](https://intro-to-datascience-20232.streamlit.app/)
 
 ## Tổng Quan
 
