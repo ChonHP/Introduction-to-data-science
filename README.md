@@ -1,25 +1,27 @@
 # HỆ THỐNG DỰ ĐOÁN GIÁ CÁC MÃ CỔ PHIẾU CỦA VIỆT NAM
 
+[![Streamlit](https://img.shields.io/badge/Go%20To-Streamlit%20Cloud-red?logo=streamlit)](https://polyps-segmentation-txgih92nkah.streamlit.app/)
+
 ## Tổng Quan
 
 Dự án này bao gồm nhiều module để thu thập, tiền xử lý và phân tích dữ liệu chứng khoán và bài báo tin tức. Các module được thiết kế để lấy dữ liệu từ nhiều nguồn, tiền xử lý dữ liệu và thực hiện dự đoán giá chứng khoán.
 
 ## Cấu Trúc Thư Mục
-├── app
-│ ├── dashboard.py
-│ └── stock_prediction_app.py
-├── crawler
-│ ├── newspaper_crawler.py
-│ ├── stock_crawler.py
-│ ├── stock_indice_crawler.py
-│ └── pre_processing.py
-├── data
-│ └── # Thư mục này chứa các tệp dữ liệu được thu thập và xử lý
-├── models
-│ ├── model_comparison_results.csv
-│ └── training_and_tuning_model.py
-├── README.md
-├── requirements.txt
+├── app \
+│ ├── dashboard.py \
+│ └── stock_prediction_app.py \
+├── crawler \
+│ ├── newspaper_crawler.py \
+│ ├── stock_crawler.py \
+│ ├── stock_indice_crawler.py \
+│ └── pre_processing.py \
+├── data \
+│ └── # Thư mục này chứa các tệp dữ liệu được thu thập và xử lý \
+├── models \
+│ ├── model_comparison_results.csv \
+│ └── training_and_tuning_model.py \
+├── README.md \
+├── requirements.txt \
 
 ## Các Module
 
@@ -29,6 +31,7 @@ Dự án này bao gồm nhiều module để thu thập, tiền xử lý và ph�
 
 ### 2. crawler
 - **newspaper_crawler.py**: Thu thập các bài báo từ các trang web tin tức.
+
 - **stock_crawler.py**: Lấy dữ liệu lịch sử chứng khoán cho các mã cổ phiếu.
 - **stock_indice_crawler.py**: Lấy dữ liệu lịch sử cho các chỉ số chứng khoán.
 - **pre_processing.py**: Tiền xử lý dữ liệu thô thu được từ các trình thu thập dữ liệu.
